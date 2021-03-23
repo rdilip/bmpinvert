@@ -14,11 +14,11 @@ import (
 
 const BPP int = 32
 
-func readint32(b []byte) uint32 {
+func read4bytes(b []byte) uint32 {
 	return uint32(b[3]) << 24 | uint32(b[2]) << 16 | uint32(b[1]) << 8 | uint32(b[0])
 }
 
-func readint16(b []byte) uint16 {
+func read2bytes(b []byte) uint16 {
 	return uint16(b[0]) | uint16(b[1]) << 8
 }
 
@@ -148,16 +148,20 @@ func readBMPMetadata(r io.Reader) (int, int, int, bool, error) {
 		log.Fatal(err)
 	}
 
-	infoLen := readint16(head[headerLen:headerLen+4])
+	infoLen := read2bytes(head[headerLen:headerLen+4])
 
 	if _, err := io.ReadFull(r, head[headerLen+4:headerLen+infoLen]); err != nil {
 		return 0, 0, 0, true, err
 	}
 
-	width := float64(int32(readint32(head[18:22])))
-	height := float64(int32(readint32(head[22:26])))
+	width := float64(int32(read4bytes(head[18:22])))
+	height := float64(int32(read4bytes(head[22:26])))
 	tb := height < 0
-	bpp := int(readint16(head[28:30]))
+	bpp := int(read2bytes(head[28:30]))
+	compression := int(read4bytes(head[30:34]))
+	if compression != 0 {
+		err = errors.New("Error: cannot have compression.")
+	}
 
 	if bpp != BPP {
 		err = errors.New("Error: bits per pixel must be " + fmt.Sprint(BPP))
