@@ -1,3 +1,3 @@
-module example.com/bmpinvert
+module github.com/rdilip/bmpinvert
 
 go 1.16
