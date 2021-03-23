@@ -23,4 +23,8 @@ Clone the repository, then run `go build`.
 ./bmpinvert -savedir=SAVEDIR -inpdir=INPDIR file1.bmp file2.bmp...
 ```
 
-All files must be 32 bpp, and the program assumes no compression was used on the images. You can list any number of bmp files in the current directory, and one additional input directory. All files will be saved to savedir.
+All files must be 32 bpp, and the program assumes no compression was used on the images. You can list any number of bmp files in the current directory, and one additional input directory. All files will be saved to savedir. 
+
+## Notes
+* Relatively untested on non-Unix systems -- it should work, but there might be sharp edges. 
+* The resources consulted were the Golang documentation and the BMP Wikipedia page. 
